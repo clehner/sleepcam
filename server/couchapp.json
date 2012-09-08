@@ -1,0 +1,5 @@
+{
+	"name": "Sleepcam",
+	"description": "Webcam pictures taken when computer resumes from sleep",
+	"index": "_rewrite/"
+}

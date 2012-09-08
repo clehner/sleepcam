@@ -1,0 +1,34 @@
+[
+	{
+		"from": "db/*",
+		"to": "../../*"
+	},
+	{
+		"from": "db",
+		"to": "../../"
+	},
+	{
+		"from": "images/pics/large/:user",
+		"to": "../../:user/large.jpg"
+	},
+	{
+		"from": "images/pics/small/:user",
+		"to": "../../:user/small.jpg"
+	},
+	{
+		"from": "images/profile/*",
+		"to": "_show/profile-pic/*"
+	},
+	{
+		"from": "",
+		"to": "index.html"
+	},
+	{
+		"from": "favicon.ico",
+		"to": "images/favicon.ico"
+	},
+	{
+		"from": "*",
+		"to": "*"
+	}
+]
