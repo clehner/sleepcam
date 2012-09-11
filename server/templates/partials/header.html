@@ -1,0 +1,16 @@
+{{#header}}
+<header>
+	<h1><a href="{{base}}">Sleepcam</a></h1>
+	<div id="session">
+	{{#current_user}}
+		<a href="{{base}}profile/{{current_user}}">
+			<img class="icon" src="{{base}}images/profile/profile-{{current_user}}" alt="{{current_user}}'s icon">{{current_user}}
+		</a>
+	{{/current_user}}
+	{{^current_user}}
+		<a href="{{base}}login">Login</a> or
+		<a href="{{base}}signup">Signup</a>
+	{{/current_user}}
+	</div>
+</header>
+{{/header}}

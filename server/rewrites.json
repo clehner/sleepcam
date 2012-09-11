@@ -1,24 +1,40 @@
 [
 	{
-		"from": "db/*",
-		"to": "../../*"
+		"from": "images/pics/large/:pic",
+		"to": "../../:pic/large.jpg"
 	},
 	{
-		"from": "db",
-		"to": "../../"
+		"from": "images/pics/small/:pic",
+		"to": "../../:pic/small.jpg"
 	},
 	{
-		"from": "images/pics/large/:user",
-		"to": "../../:user/large.jpg"
+		"from": "images/profile/:profile-name",
+		"to": "_show/profile-pic/:profile-name"
+	},
+
+	{
+		"from": "profile/:user",
+		"to": "_list/profile-stream/pics-by-user",
+		"query": {
+			"include_docs": "true",
+			"descending": "true",
+			"startkey": [":user", {}],
+			"endkey": [":user"],
+			"limit": "100"
+		}
+	},
+
+	{
+		"from": "pic/:id",
+		"to": "_show/pic/:id",
+		"method": "GET"
 	},
 	{
-		"from": "images/pics/small/:user",
-		"to": "../../:user/small.jpg"
+		"from": "pic/:id",
+		"to": "_update/pic/:id",
+		"method": "POST"
 	},
-	{
-		"from": "images/profile/*",
-		"to": "_show/profile-pic/*"
-	},
+
 	{
 		"from": "",
 		"to": "index.html"

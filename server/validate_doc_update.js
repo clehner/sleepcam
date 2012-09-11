@@ -14,15 +14,8 @@ function arrayDiff(oldArray, newArray, isEqual, onAppend, onRemove) {
 	}
 
 	for (i -= itemsDeleted; i < newArray.length; i++) {
-		onAppend(newArray[i]);
+		onAppend(newArray[i], i);
 	}
-}
-
-function commentsEqual(a, b) {
-	return a && b &&
-		a.user == b.user &&
-		a.time == b.time &&
-		a.content == b.content;
 }
 
 function isArrayOrNull(a) {
@@ -81,13 +74,21 @@ function (doc, oldDoc, userCtx) {
 		if (!isArrayOrNull(doc.likes))
 			throw {forbidden: "improper likes array"};
 
-		arrayDiff(oldDoc.likes, doc.likes, null,
-			function like(like) {
-				if (like != userCtx.name && !isAdmin)
-					throw {unauthorized: "you can only like for yourself"};
+		arrayDiff(oldDoc.likes, doc.likes,
+			function likesEqual(a, b) {
+				return a && b &&
+					a.user == b.user &&
+					a.time == b.time;
 			},
-			function unlike(like) {
-				if (like != userCtx.name && !isAdmin)
+			function onAddLike(like, i) {
+				if (like.user != userCtx.name && !isAdmin)
+					throw {unauthorized: "you can only like for yourself"};
+
+				if (doc.likes[i-1] && doc.likes[i-1].time > like.time)
+					throw {forbidden: "like time must be after previous"};
+			},
+			function onUnlike(like) {
+				if (like.user != userCtx.name && !isAdmin)
 					throw {unauthorized: "cannot unlike another's like"};
 			}
 		);
@@ -95,12 +96,18 @@ function (doc, oldDoc, userCtx) {
 		if (!isArrayOrNull(doc.comments))
 			throw {forbidden: "improper comments array"};
 
-		arrayDiff(oldDoc.comments, doc.comments, commentsEqual,
-			function onAddComment(comment) {
+		arrayDiff(oldDoc.comments, doc.comments,
+			function commentsEqual(a, b) {
+				return a && b &&
+					a.user == b.user &&
+					a.time == b.time &&
+					a.content == b.content;
+			},
+			function onAddComment(comment, i) {
 				if (comment.user != userCtx.name)
 					throw {unauthorized: "comment with your own name."};
 
-				if (comments[i-1] && comments[i-1].time > comment.time)
+				if (doc.comments[i-1] && doc.comments[i-1].time > comment.time)
 					throw {forbidden: "comment time must be after previous"};
 
 				if (typeof comment.content != "string" ||
@@ -111,7 +118,8 @@ function (doc, oldDoc, userCtx) {
 				if (!isAdmin &&
 					userCtx.name != doc.user &&
 					userCtx.name != comment.user)
-						throw {unauthorized: "you can only remove your own comments or comments made on your pictures."}; 
+						throw {unauthorized: "you can only remove " +
+							"your own comments or comments made on your pictures."}; 
 			}
 		);
 

@@ -1,0 +1,172 @@
+/* all */
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	background-color: #30495B;
+	color: #4BCCD6;
+}
+
+a {
+	color: #52FDF8;
+}
+
+/* header */
+header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3em;
+	background-color: #1D2531;
+}
+
+h1 {
+	font-size: 1.5em;
+	margin: 0 .5em 0;
+	line-height: 2em;
+}
+h1 a {
+	text-decoration: none;
+}
+
+#session {
+	position: absolute;
+	right: 0;
+	top: 0;
+	line-height: 3em;
+	margin-right: 1em;
+}
+
+img.icon {
+	height: 1.5em;
+	width: 2em;
+	vertical-align: middle;
+	margin-right: 1ex;
+	border: 1px solid #000;
+	background-color: #34475F;
+}
+#session img.icon {
+}
+
+/* content */
+article {
+	position: absolute;
+	top: 2.5em;
+	bottom: 0;
+	right: 1ex;
+	left: 1ex;
+}
+
+/* pics */
+
+h2 {
+	text-align: center;
+}
+
+#pics {
+	position: absolute;
+	line-height: 1px;
+	margin: 0;
+	padding: 1em 0 2em;
+	top: 4em;
+	bottom: 0;
+	right: 50%;
+	width: 45%;
+	max-width: 32em;
+	overflow: auto;
+}
+
+#pics li {
+	list-style-type: none;
+	display: inline-block;
+}
+
+#pics img {
+	border: none;
+}
+
+#pics img:hover {
+	outline: 2px solid rgba(255, 255, 255, .7);
+	position: relative;
+}
+#pics img.selected {
+	outline: 2px solid #fff;
+	position: relative;
+}
+
+/* right side */
+aside {
+	position: absolute;
+	left: 52%;
+	top: 4em;
+	right: 1ex;
+	bottom: 0;
+	overflow: auto;
+	overflow-x: visible;
+}
+#pics-info {
+	background-color: #3E7186;
+	margin-bottom: 1em;
+	padding: 1ex;
+}
+
+#large-pic {
+	width: 100%;
+	max-width: 640px;
+}
+
+#pic-info-interaction {
+	margin-bottom: .5ex;
+}
+.pic-info {
+	display: none;
+}
+
+.pic-info ul.comments {
+	padding: 0 1ex;
+	margin: 1ex -1ex 1ex;
+	border-bottom: 1px solid #30495B;
+}
+.pic-info ul.likes, .pic-info .likes li {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+.pic-info .likes li:not(:first-child)::before {
+	content: ', ';
+}
+.likes li:not(:first-child):last-child::before {
+	content: ' and ';
+}
+
+.comment {
+	clear: left;
+	list-style-type: none;
+	padding: 1ex 1ex 0;
+	margin: 1ex -1ex;
+	border-top: 1px solid #30495B;
+}
+.comment h4 {
+	margin: 0ex 0ex 1ex 2.75em;
+}
+.comment time {
+	float: right;
+}
+.comments .icon {
+	position: absolute;
+}
+.comments p {
+	margin: 0;
+	margin-left: 2.75em;
+}
+
+#comment-form {
+	margin: 0 1ex 0 2.75em;
+}
+#comment-icon {
+	position: absolute;
+	margin-left: -2.75em;
+}
+#comment {
+	width: 100%;
+}
+

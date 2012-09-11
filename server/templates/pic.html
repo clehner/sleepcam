@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+	<title>Sleepcam.org : {{user}} : {{date}}</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="../styles/main.css" type="text/css">
+</head>
+<body>
+
+{{>header}}
+
+<article>
+
+<h2><a href="../profile/{{user}}">{{user}}</a></h2>
+
+<p>{{date}}</p>
+<p><img src="../images/pics/large/{{id}}" alt=""></p>
+
+<ul id="comments">
+{{#comments}}
+	{{>comment}}
+{{/comments}}
+</ul>
+
+<form action="" method="post">
+	<input type="hidden" name="delete" value="true">
+	<p><input type="submit" value="Delete"></p>
+</form>
+
+</article>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+	<title>Sleepcam.org: {{user}}</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="../styles/main.css" type="text/css">
+	<script src="../scripts/util.js"></script>
+</head>
+<body>
+
+{{>header}}
+
+<article>
+
+<h2>{{user}}</h2>
+
+<ul id="pics">
+{{#pics}}<li>
+	<a href="../{{link}}" title="{{date}}" id="pic-{{time}}">
+		<img src="../images/pics/small/{{id}}" alt="">
+	</a>
+</li>{{/pics}}
+</ul>
+
+<aside>
+<div id="pics-info">
+<img id="large-pic" alt="">
+
+<div id="pic-info-interaction">
+	<a id="like-link" href="">like</a> &middot;
+	<a id="comment-link" href="">comment</a> &middot;
+	<time>&nbsp;</time>
+</div>
+
+{{#pics}}
+<div class="pic-info" id="pic-{{time}}-info">
+	<ul class="likes">
+	{{#likes}}
+		<li><a href="{{user}}" title="{{user}}">{{user}}</a></li>
+	{{/likes}}
+	</ul>&nbsp;
+
+	<ul class="comments">
+	{{#comments}}
+		{{>comment}}
+	{{/comments}}
+	</ul>
+</div>
+{{/pics}}
+
+<form id="comment-form" action="" method="post">
+	<img id="comment-icon" class="icon">
+	<input id="comment" name="post_comment" placeholder="comment">
+</form>
+
+</div>
+</aside>
+
+</article>
+
+<script src="../scripts/profile.js"></script>
+
+</body>
+</html>
