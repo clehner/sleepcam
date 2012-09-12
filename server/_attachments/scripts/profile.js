@@ -1,8 +1,6 @@
 (function () {
 
-var user = ($("session").getElementsByTagName("a")[0]
-		.href.match(/profile\/([^"]+)/) || 0)[1],
-	picsInfo = $("pics-info"),
+var picsInfo = $("pics-info"),
 	largePic = $("large-pic"),
 	picsList = $("pics"),
 	thumbLocked = false,
@@ -22,19 +20,21 @@ var user = ($("session").getElementsByTagName("a")[0]
 // Picture selection
 
 function selectThumb(thumb) {
+	if (!thumb) return selectNone();
 	if (thumb == selectedThumb) return;
+	if (selectedThumb) {
+		selectedThumb.className = "";
+	}
 	selectedThumb = thumb;
-	var fullSrc = thumb.src.replace('small', 'large');
-	largePic.src = fullSrc;
+	selectedThumb.className = "selected";
+	largePic.src = thumb.src.replace('small', 'large');
 }
 
-function picHover(e) {
-	if (!thumbLocked && e.target.src) selectThumb(e.target);
-}
-picsList.addEventListener("mouseover", picHover, false);
-
-function picLoaded(e) {
-	var time = largePic.src.match(/large\/([0-9]+)/)[1];
+function picLoaded() {
+	var s = largePic.src.match(/large\/(.+)/);
+	if (!s) return;
+	var id = s[1] || "";
+	var time = id.split("-")[0];
 	var newInfo = $("pic-" + time + "-info");
 	if (!newInfo || newInfo == selectedInfo) return;
 	if (selectedInfo) selectedInfo.style.display = "";
@@ -48,43 +48,53 @@ function picLoaded(e) {
 
 	picTime.setAttribute("datetime", selectedTime);
 	updateTime(picTime);
-	commentForm.action = selectedThumb.parentNode.href;
+	commentForm.action = "../pic/" + id;
 	var unsentComment = !submittingComment && commentField.value;
 	unsentComments[time] = unsentComment;
 	commentField.value = unsentComments[time] || "";
 	updateLikeList();
 }
 largePic.addEventListener("load", picLoaded, false);
+//if (largePic.src) picLoaded();
 
-picHover({target: picsList.getElementsByTagName("img")[0]});
+function selectFirst() {
+	selectThumb(picsList.getElementsByTagName("img")[0]);
+}
+function selectNone() {
+	if (selectedInfo) selectedInfo.style.display = "";
+	picTime.removeAttribute("datetime");
+	picTime.firstChild.nodeValue = "";
+	largePic.src = "../images/transparent.gif";
+}
 
 function picClick(e) {
 	if (!e.target.src) return;
-	if (thumbLocked) {
-		var wasLocked = selectedThumb;
-		unlockThumb();
-	}
-	if (e.target != selectedThumb) {
-		picHover(e);
-	}
-	if (e.target != wasLocked) {
-		lockThumb();
-	}
-	e.preventDefault();
-	e.stopPropagation();
+	if (e.target && e.target.src) selectThumb(e.target);
 }
 pics.addEventListener("click", picClick, false);
 
-function lockThumb() {
-	selectedThumb.className = "selected";
-	thumbLocked = true;
-}
+function onHashChange(e) {
+	var hash = location.hash.substr(1), a, img;
+	if ((hash[0] == "!") &&
+		(a = $("pic-" + hash.substr(1))) &&
+		(img = a.getElementsByTagName("img")[0])) {
 
-function unlockThumb() {
-	selectedThumb.className = "";
-	thumbLocked = false;
+		selectThumb(img);
+
+		// scroll pic into view, if necessary
+		var li = a.parentNode,
+			ul = picsList;
+		if (ul.scrollTop > li.offsetTop) {
+			ul.scrollTop = li.offsetTop;
+		} else if (ul.scrollTop + ul.clientHeight < li.offsetTop + li.offsetHeight) {
+			ul.scrollTop = li.offsetTop + li.offsetHeight - ul.clientHeight;
+		}
+	}
 }
-document.body.addEventListener("click", unlockThumb, false);
+window.addEventListener("hashchange", onHashChange, false);
+onHashChange();
+// if hash does give a pic selection, select the first one.
+if (!selectedThumb) selectFirst();
 
 function timeUnit(n, unit) {
 	return ~~n + " " + unit + (~~n == 1 ? "" : "s") + " ago";
@@ -113,14 +123,14 @@ setInterval(updateTimes, 60*1000);
 
 // Comment form
 
-if (user) {
-	$("comment-icon").src = "../images/profile/profile-" + user;
-}
-
 // comment link
 $("comment-link").addEventListener("click", function (e) {
 	e.preventDefault();
-	commentField.focus();
+	if (app.user) {
+		commentField.focus();
+	} else {
+		alert("Log in or sign up to comment.");
+	}
 }, false);
 
 // like
@@ -135,6 +145,11 @@ likeLink.addEventListener("click", function (e) {
 }, false);
 
 function submitLike() {
+	if (!app.user) {
+		alert("Log in or sign up to submit your like.");
+		return;
+	}
+
 	ajax(commentForm.action, {
 		method: "post",
 		data: {like: 1},
@@ -142,9 +157,9 @@ function submitLike() {
 			submittingLike = false;
 			var li = document.createElement("li");
 			var a = document.createElement("a");
-			a.href = user;
-			a.title = user;
-			a.appendChild(document.createTextNode(user));
+			a.href = app.user;
+			a.title = app.user;
+			a.appendChild(document.createTextNode(app.user));
 			li.appendChild(a);
 			likeList.appendChild(li);
 			updateLikeList();
@@ -160,7 +175,7 @@ function submitUnlike() {
 			submittingLike = false;
 			var lis = likeList.getElementsByTagName("li");
 			for (var i = 0; i < lis.length; i++) {
-				if (lis[i].firstChild.title == user) {
+				if (lis[i].firstChild.title == app.user) {
 					likeList.removeChild(lis[i]);
 					break;
 				}
@@ -177,7 +192,7 @@ function updateLikeList() {
 	var youLiked = false;
 	for (var i = 0; i < numLikes; i++) {
 		var a = lis[i].firstChild;
-		if (a.title == user) {
+		if (a.title == app.user) {
 			youLiked = true;
 			a.firstChild.nodeValue = "You";
 			break;
@@ -201,7 +216,7 @@ commentForm.addEventListener("submit", function (e) {
 function submitComment() {
 	ajaxSubmit(commentForm, function (resp) {
 		submittingComment = false;
-		addComment(user, commentField.value, new Date());
+		addComment(app.user, commentField.value, new Date());
 		commentField.value = "";
 	});
 }
@@ -235,5 +250,26 @@ function addComment(user, content, date) {
 	commentList.appendChild(li);
 	updateTimes(commentList);
 }
+
+// delete
+var deleteLink = $("delete-link");
+if (deleteLink) deleteLink.addEventListener("click", function (e) {
+	e.preventDefault();
+	if (!confirm("Really delete this picture?")) return;
+	var thumbEl = selectedThumb.parentNode.parentNode; //li
+	var infoEl = selectedInfo;
+	ajax(commentForm.action, {
+		method: "post",
+		data: {delete: 1},
+		success: function (resp) {
+			if (infoEl == selectedInfo) {
+				// go to next pic
+				thumbEl.nextSibling.getElementsByTagName("a")[0].click();
+			}
+			picsList.removeChild(thumbEl);
+			picsInfo.removeChild(infoEl);
+		}
+	});
+}, false);
 
 }());

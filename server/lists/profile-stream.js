@@ -2,9 +2,14 @@ function(head, req) {
 	var Mustache = require("vendor/mustache");
 
 	provides("html", function () {
-		var user = req.query.user;
-		var row = getRow();
-		var profile = {};
+		var user = req.query.user,
+			currentUser = req.userCtx.name,
+			isAdmin = req.userCtx.roles.indexOf("_admin") != -1,
+			row = getRow(),
+			profile = {},
+			hashPicId = req.query._escaped_fragment_,
+			gotHashPic;
+
 		if (!row) {
 			// fail
 			start({
@@ -19,19 +24,34 @@ function(head, req) {
 		}
 
 		var iconTime = profile.profile_pic_time;
+		var path = [req.headers.Host].concat(req.requested_path.slice(0, -2)).join("/");
 		var stash = {
-			header: {
-				current_user: req.userCtx.name,
-				base: "../"
-			},
+			hash: hashPicId ? "#!" + hashPicId : "",
+			header: {},
+			base: "../",
+			abs_base: "http://" + path + "/",
+			current_user: currentUser,
 			user: user,
 			icon: iconTime ? "images/pics/small/" + iconTime + "-" + user : null,
-			pics: []
+			pics: [],
+			can_delete: isAdmin || (currentUser == user)
 		};
 
 		if (row) do {
 			var doc = row.doc;
 			if (!doc) continue;
+
+			// If a pic is specified in the escaped hash,
+			// select it, and don't show the other pics
+			if (hashPicId) {
+				if (hashPicId + "-" + user == row.id) {
+					gotHashPic = true;
+				} else if (gotHashPic) {
+					break;
+				} else {
+					continue;
+				}
+			}
 
 			var comments = doc.comments || [];
 			comments.forEach(function (comment) {
@@ -47,6 +67,17 @@ function(head, req) {
 				date: new Date(doc.time * 1000)
 			});
 		} while (row = getRow());
+
+		// pic for facebook is either pic referenced by hash,
+		// or first 10 pics in the ;ist
+		stash.og_pics = stash.pics.slice(0, 10);
+
+		stash.og_desc = gotHashPic ?
+			"Picture taken when " + user + "'s computer woke from sleep" :
+			"Pictures taken when " + user + "'s computer wakes from sleep";
+		stash.og_title = gotHashPic ?
+			user + "'s Sleepcam: " + stash.pics[0].date.toDateString() :
+			user + "'s Sleepcam";
 
 		return Mustache.render(this.templates.profile, stash, this.templates.partials);
 	});

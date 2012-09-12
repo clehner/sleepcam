@@ -1,16 +1,16 @@
 {{#header}}
-<header>
+<header class="{{^current_user}}not-{{/current_user}}logged-in">
 	<h1><a href="{{base}}">Sleepcam</a></h1>
 	<div id="session">
-	{{#current_user}}
-		<a href="{{base}}profile/{{current_user}}">
-			<img class="icon" src="{{base}}images/profile/profile-{{current_user}}" alt="{{current_user}}'s icon">{{current_user}}
-		</a>
-	{{/current_user}}
-	{{^current_user}}
-		<a href="{{base}}login">Login</a> or
-		<a href="{{base}}signup">Signup</a>
-	{{/current_user}}
+		<span class="logged-in">
+			<a id="profile-link"{{#current_user}} href="{{base}}profile/{{current_user}}"{{/current_user}}>
+				<img class="icon"{{#current_user}} src="{{base}}images/profile/profile-{{current_user}}" alt="{{current_user}}'s icon"{{/current_user}}>{{current_user}}
+			</a>
+		</span>
+		<span class="not-logged-in">
+			<a href="{{base}}login">Login</a> or
+			<a href="{{base}}signup">Signup</a>
+		</span>
 	</div>
 </header>
 {{/header}}

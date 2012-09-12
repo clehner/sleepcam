@@ -8,8 +8,27 @@
 		"to": "../../:pic/small.jpg"
 	},
 	{
+		"from": "images/pics/large/",
+		"to": "images/transparent.gif"
+	},
+	{
+		"from": "images/pics/small/",
+		"to": "images/transparent.gif"
+	},
+
+	{
 		"from": "images/profile/:profile-name",
 		"to": "_show/profile-pic/:profile-name"
+	},
+
+	{
+		"from": "",
+		"to": "_list/index/pics",
+		"query": {
+			"descending": "true",
+			"limit": "20",
+			"reduce": "false"
+		}
 	},
 
 	{
@@ -35,10 +54,6 @@
 		"method": "POST"
 	},
 
-	{
-		"from": "",
-		"to": "index.html"
-	},
 	{
 		"from": "favicon.ico",
 		"to": "images/favicon.ico"

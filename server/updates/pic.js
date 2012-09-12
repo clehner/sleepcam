@@ -43,12 +43,9 @@ function(doc, req) {
 	}
 
 	if (req.form.unlike) {
-		if (doc.likes) {
-			var i = doc.likes.indexOf(user);
-			if (i != -1) {
-				doc.likes.splice(i, 1);
-			}
-		}
+		if (doc.likes) doc.likes = doc.likes.filter(function (like) {
+			return like.user != user;
+		});
 	}
 
 	return [doc, "ok"];

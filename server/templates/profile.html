@@ -5,30 +5,42 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="../styles/main.css" type="text/css">
 	<script src="../scripts/util.js"></script>
+	<script src="../scripts/site.js"></script>
+
+	<meta property="og:url" content="{{abs_base}}profile/{{user}}{{hash}}">
+	{{#og_pics}}
+	<meta property="og:image" content="{{abs_base}}images/pics/large/{{id}}">
+	{{/og_pics}}
+	<meta property="og:title" content="{{og_title}}">
+	<meta property="og:type" content="article">
+	<meta property="og:description" content="{{og_desc}}">
 </head>
 <body>
 
 {{>header}}
 
-<article>
+<article id="profile-page">
 
 <h2>{{user}}</h2>
 
 <ul id="pics">
 {{#pics}}<li>
-	<a href="../{{link}}" title="{{date}}" id="pic-{{time}}">
+	<a href="#!{{time}}" title="{{date}}" id="pic-{{time}}">
 		<img src="../images/pics/small/{{id}}" alt="">
 	</a>
 </li>{{/pics}}
 </ul>
 
-<aside>
+<aside id="pic-detail">
 <div id="pics-info">
 <img id="large-pic" alt="">
 
 <div id="pic-info-interaction">
 	<a id="like-link" href="">like</a> &middot;
 	<a id="comment-link" href="">comment</a> &middot;
+	{{#can_delete}}
+	<a id="delete-link" href="">delete</a> &middot;
+	{{/can_delete}}
 	<time>&nbsp;</time>
 </div>
 
@@ -48,8 +60,8 @@
 </div>
 {{/pics}}
 
-<form id="comment-form" action="" method="post">
-	<img id="comment-icon" class="icon">
+<form id="comment-form" action="" method="post" class="not-logged-in">
+	<img id="comment-icon" class="icon" src="../images/profile/profile-{{current_user}}">
 	<input id="comment" name="post_comment" placeholder="comment">
 </form>
 
@@ -59,6 +71,8 @@
 </article>
 
 <script src="../scripts/profile.js"></script>
+
+{{>tracker}}
 
 </body>
 </html>

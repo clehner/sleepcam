@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+	<title>Sleepcam.org</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="styles/main.css" type="text/css">
+	<script src="scripts/util.js"></script>
+	<script src="scripts/site.js"></script>
+
+	<meta property="og:url" content="{{abs_base}}">
+	{{#og_pics}}
+	<meta property="og:image" content="{{abs_base}}images/pics/large/{{id}}">
+	{{/og_pics}}
+	<meta property="og:title" content="Sleepcam">
+	<meta property="og:type" content="website">
+	<meta property="og:description" content="Takes a picture when your computer wakes from sleep">
+	<meta property="fb:admins" content="1361520039"/>
+</head>
+<body>
+
+{{>header}}
+
+<article id="home-page">
+
+	<h1 id="title">Sleepcam.org</h1>
+
+	<div id="description" class="special">
+		<p>Sleepcam takes a picture of you every time you wake your computer from sleep, and uploads the picture to your profile on sleepcam.org.</p>
+		<p><strong>Get your sleepcam today!</strong></p>
+		<p id="download">
+			<a href="downloads/Sleepcam-1.0.0.dmg" title="Download the Sleepcam software">
+				Download for Mac OS X 10.6+
+			</a>
+		</p>
+	</div>
+
+	<div id="latest-all">
+		<h3>Latest pictures from everyone</h3>
+		<ul id="pics">
+		{{#pics}}<li>
+			<a href="profile/{{user}}#!{{time}}" title="{{user}} on {{date}}">
+				<img src="images/pics/small/{{id}}" alt="">
+			</a>
+		</li>{{/pics}}
+		</ul>
+	</div>
+
+</article>
+
+{{>tracker}}
+
+</body>
+</html>
+
