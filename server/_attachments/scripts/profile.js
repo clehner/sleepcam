@@ -126,10 +126,8 @@ setInterval(updateTimes, 60*1000);
 // comment link
 $("comment-link").addEventListener("click", function (e) {
 	e.preventDefault();
-	if (app.user) {
+	if (app.requireLogin("Log in or sign up to comment")) {
 		commentField.focus();
-	} else {
-		alert("Log in or sign up to comment.");
 	}
 }, false);
 
@@ -145,10 +143,7 @@ likeLink.addEventListener("click", function (e) {
 }, false);
 
 function submitLike() {
-	if (!app.user) {
-		alert("Log in or sign up to submit your like.");
-		return;
-	}
+	if (!app.requireLogin("Log in or sign up to submit your like.")) return;
 
 	ajax(commentForm.action, {
 		method: "post",

@@ -41,12 +41,14 @@ function ajax(url, opt) {
 				try {
 					resp = JSON.parse(resp);
 				} catch (e) {
-					resp = {error: "JSON error", reason: e.message};
+					resp = {error: "JSON error", reason: "JSON decoding failed"};
 				} finally {
-					if (opt.error) {
+					if (xhr.status in {200:1, 201:1, 202:1}) {
+						if (opt.success) opt.success(resp);
+					} else if (opt.error) {
 						opt.error(resp);
 					} else {
-						alert("JSON Error: " + e.message);
+						alert("Error: " + resp.reason);
 					}
 				}
 			}
@@ -77,5 +79,37 @@ function ajaxSubmit(form, cb) {
 
 function $(id) {
 	return document.getElementById(id);
+}
+
+// http://www.nczonline.net/blog/2009/07/28/the-best-way-to-load-external-javascript/
+function loadScript(url, callback) {
+	var script = document.createElement("script");
+	script.type = "text/javascript";
+	script.async = "async";
+
+	if (!callback) {
+	} else if (script.readyState) { // IE
+		script.onreadystatechange = function () {
+			if (script.readyState in {loaded:1, complete:1}) {
+				script.onreadystatechange = null;
+				callback();
+			}
+		};
+	} else { // others
+		script.onload = callback;
+	}
+
+	script.src = url;
+	var head = document.documentElement.firstChild;
+	head.insertBefore(script, head.firstChild);
+}
+
+// Conditionally load a script
+function shim(feature, url, callback) {
+	if (feature) {
+		callback && callback();
+	} else {
+		loadScript(url, callback);
+	}
 }
 

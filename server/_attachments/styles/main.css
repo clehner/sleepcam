@@ -9,6 +9,10 @@ h1, h2, h3, h4, a, strong, .special {
 	color: #F7E4C7;
 }
 
+.error {
+	color: #221F19;
+}
+
 .logged-in .not-logged-in,
 .not-logged-in .logged-in {
 	display: none;
@@ -49,7 +53,11 @@ img.icon {
 	border: 1px solid #000;
 	background-color: #34475F;
 }
-#session img.icon {
+
+#logout-link {
+	color: #9B8E7C;
+	opacity: .9;
+	margin-left: 1ex;
 }
 
 /* content */
@@ -61,9 +69,47 @@ article {
 	left: 1ex;
 }
 
-/* overlays */
+/* Login form */
+
+#login-iframe {
+	position: absolute;
+	left: 30%;
+	width: 40%;
+	top: 25%;
+	min-width: 8em;
+	z-index: 6;
+	border-style: none;
+	background-color: #9B8E7C;
+}
+
+#login-page {
+	margin: 0;
+	padding: 2em 6.25%;
+	text-align: center;
+	background-color: #9B8E7C;
+	color: #474137;
+}
+#login-page h2 {
+	margin: 0;
+}
+#login-page input[name] {
+	width: 50%;
+	min-width: 9em;
+}
+
+#signup-welcome {
+	display: none;
+}
+
 .overlay {
-	
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #221F19;
+	opacity: 0.75;
+	z-index: 5;
 }
 
 /* pics */

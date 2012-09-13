@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+	<title>Sleepcam.org: Login</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="styles/main.css" type="text/css">
+</head>
+<body id="login-page">
+	<form id="login-form" action="/_session" method="post">
+		<h2>Login / Signup</h2>
+		<p id="login-note"></p>
+		<p><input id="name" name="name" placeholder="Username"></p>
+		<p><input id="password" name="password" type="password" placeholder="Password"></p>
+		<input type="reset" value="Cancel">
+		<input type="submit" value="Login">
+		<input type="button" value="Create Account" id="signup-button">
+		<p id="login-result"></p>
+	</form>
+
+	<div id="signup-welcome">
+		<h2>Welcome!</h2>
+		<p>To start getting pictures taken, download and install the <a href="downloads/Sleepcam.dmg">Sleepcam software</a>.</p>
+		<p><input type="button" id="signup-welcome-ok" value="OK"></p>
+	</div>
+</body>
+</html>

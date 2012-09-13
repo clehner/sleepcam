@@ -55,8 +55,25 @@
 	},
 
 	{
+		"from": "login",
+		"to": "_show/login/"
+	},
+	{
+		"from": "signup",
+		"to": "signup.html"
+	},
+
+	{
+		"from": "_changes",
+		"to": "../../_changes"
+	},
+	{
 		"from": "favicon.ico",
 		"to": "images/favicon.ico"
+	},
+	{
+		"from": "downloads/Sleepcam.dmg",
+		"to": "downloads/Sleepcam-1.0.0.dmg"
 	},
 	{
 		"from": "*",

@@ -4,12 +4,11 @@
 	<div id="session">
 		<span class="logged-in">
 			<a id="profile-link"{{#current_user}} href="{{base}}profile/{{current_user}}"{{/current_user}}>
-				<img class="icon"{{#current_user}} src="{{base}}images/profile/profile-{{current_user}}" alt="{{current_user}}'s icon"{{/current_user}}>{{current_user}}
-			</a>
+				<img class="icon"{{#current_user}} src="{{base}}images/profile/profile-{{current_user}}" alt="{{current_user}}'s icon"{{/current_user}}>{{current_user}}{{^current_user}}&nbsp;{{/current_user}}</a>
+			<a id="logout-link" href="{{base}}logout">Logout</a>
 		</span>
 		<span class="not-logged-in">
-			<a href="{{base}}login">Login</a> or
-			<a href="{{base}}signup">Signup</a>
+			<a id="login-link" href="{{base}}login">Login / Signup</a>
 		</span>
 	</div>
 </header>
