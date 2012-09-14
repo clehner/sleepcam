@@ -143,6 +143,7 @@
         [self updateLoginResult:@"Unable to login."];
     }
 	[spinner stopAnimation:self];
+    [self updateProfileImage:username];
 }
 
 - (IBAction) createAccount:(id)pId
