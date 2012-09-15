@@ -25,7 +25,7 @@ localdest='Pictures/Sleep/sent'
 defaultdb='https://sleepcam.iriscouch.com/sleepcam'
 resources=`dirname "$0"`
 
-cd $HOME
+cd
 
 function loaddb {
 	db=`defaults read $bundleid DBUrl 2>/dev/null`
@@ -74,7 +74,7 @@ function uploadpics {
 		time=${picname%.*}
 		smallpic=/tmp/smallpic$time.jpg
 		tmp=/tmp/pic$time.json
-		sips -Z 96 "$pic" --out "$smallpic" >/dev/null 2>&1 || continue
+		sips --resampleHeight 72 "$pic" --out "$smallpic" >/dev/null 2>&1 || continue
 
 		# json escaping
 		username2=${username//\\/\\\\}
@@ -153,7 +153,7 @@ function createaccount {
 	isonline || return 1
 	loaddb
 
-	userdoc="{\"_id\":\"org.couchdb.user:$username2\",\"name\":\"$username2\",\"roles\":[],\"type\":\"user\",\"password\":\"$password2\"}"
+	userdoc="{\"_id\":\"org.couchdb.user:$username2\",\"name\":\"$username2\",\"roles\":[\"user\"],\"type\":\"user\",\"password\":\"$password2\"}"
 	[[ `curl -sX PUT "$host/_users/org.couchdb.user:$username" --data-binary "$userdoc"` =~ '"ok":true' ]]
 }
 

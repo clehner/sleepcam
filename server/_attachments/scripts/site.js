@@ -67,18 +67,24 @@ var loginDialog = {
 				var signupBtn = self.$("signup-button");
 				if (signupBtn) signupBtn.addEventListener("click", function () {
 					if (signingUp++) return;
-					self.user = self.$("name").value;
+					var user = self.$("name").value;
+					var password = self.$("password").value;
 					Couch.signup({
-						name: self.user,
-						roles: []
-					}, self.$("password").value, {
+						name: user,
+						roles: ["user"]
+					}, password, {
 						success: function () {
 							signingUp = false;
-							self.onSignupSuccess(self.user);
+							self.user = user;
+							self.onSignupSuccess(user);
+							Couch.login({
+								name: user,
+								password: password
+							});
 						},
 						error: function (status, error, reason) {
 							signingUp = false;
-							self.onSignupError(self.user, error, reason);
+							self.onSignupError(user, error, reason);
 						}
 					});
 				});

@@ -193,9 +193,17 @@
 
 - (bool) execCommand:(NSArray*)args
 {
-    NSTask *task = [NSTask launchedTaskWithLaunchPath:scriptPath arguments:args];
+    // this was giving a crash under OSX 10.8.1:
+    //NSTask *task = [NSTask launchedTaskWithLaunchPath:scriptPath arguments:args];
+    
+    NSTask *task = [[NSTask alloc] init];
+    [task setLaunchPath: scriptPath];
+    [task setArguments: args];
+    [task launch];
     [task waitUntilExit];
-    return ([task terminationStatus] == 0);
+    bool success = [task terminationStatus] == 0;
+    [task release];
+    return success;
     /*
      NSTask *task = [[NSTask alloc] init];
      [task setLaunchPath: scriptPath];
