@@ -37,7 +37,7 @@ function ajax(url, opt) {
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4) {
 			var resp = xhr.responseText;
-			if (opt.format == "json") {
+			if (opt.format == "json" || opt.response_format == "json") {
 				try {
 					resp = JSON.parse(resp);
 				} catch (e) {
@@ -51,30 +51,13 @@ function ajax(url, opt) {
 						alert("Error: " + resp.reason);
 					}
 				}
-			}
-
-			if (opt.success) {
+			} else if (opt.success) {
 				opt.success(resp);
 			}
 			xhr = null;
 		}
 	};
 	xhr.send(sendingData ? data : null);
-}
-
-function ajaxSubmit(form, cb) {
-	var data = {};
-	["input", "select", "textarea"].forEach(function (tag) {
-		[].forEach.call(form.getElementsByTagName(tag), function (input) {
-			var name = input.name || input.id;
-			if (name) data[name] = input.value;
-		});
-	});
-	ajax(form.action || "", {
-		method: form.method,
-		data: data,
-		success: cb
-	});
 }
 
 function $(id) {

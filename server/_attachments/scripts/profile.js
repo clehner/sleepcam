@@ -14,7 +14,6 @@ var picsInfo = $("pics-info"),
 	commentList,
 	unsentComments = {},
 	likeList,
-	commentList,
 	likeLink = $("like-link");
 
 // Picture selection
@@ -27,11 +26,14 @@ function selectThumb(thumb) {
 	}
 	selectedThumb = thumb;
 	selectedThumb.className = "selected";
-	largePic.src = thumb.src.replace('small', 'large');
+	largePic.src = thumb.src.replace("small", "large");
 }
 
 function picLoaded() {
-	var s = largePic.src.match(/large\/(.+)/);
+	// it is hidden at first, so show it
+	picsInfo.style.display = "block";
+
+	var s = this.src.match(/large\/(.+)/);
 	if (!s) return;
 	var id = s[1] || "";
 	var time = id.split("-")[0];
@@ -64,14 +66,8 @@ function selectNone() {
 	if (selectedInfo) selectedInfo.style.display = "";
 	picTime.removeAttribute("datetime");
 	picTime.firstChild.nodeValue = "";
-	largePic.src = "../images/transparent.gif";
+	picsInfo.style.display = "none";
 }
-
-function picClick(e) {
-	if (!e.target.src) return;
-	if (e.target && e.target.src) selectThumb(e.target);
-}
-pics.addEventListener("click", picClick, false);
 
 function onHashChange(e) {
 	var hash = location.hash.substr(1), a, img;
@@ -209,10 +205,17 @@ commentForm.addEventListener("submit", function (e) {
 }, false);
 
 function submitComment() {
-	ajaxSubmit(commentForm, function (resp) {
-		submittingComment = false;
-		addComment(app.user, commentField.value, new Date());
-		commentField.value = "";
+	ajax(commentForm.action, {
+		method: "post",
+		response_format: "json",
+		data: {
+			post_comment: commentField.value
+		},
+		success: function (resp) {
+			submittingComment = false;
+			addComment(app.user, commentField.value, new Date());
+			commentField.value = "";
+		}
 	});
 }
 
@@ -238,6 +241,12 @@ function addComment(user, content, date) {
 	time.appendChild(document.createTextNode(date.toDateString()));
 	h4.appendChild(time);
 
+	var deleteA = document.createElement("a");
+	deleteA.className = "delete-comment-link";
+	deleteA.href = "";
+	deleteA.appendChild(document.createTextNode("delete"));
+	li.appendChild(p);
+
 	var p = document.createElement("p");
 	p.appendChild(document.createTextNode(content));
 	li.appendChild(p);
@@ -246,7 +255,31 @@ function addComment(user, content, date) {
 	updateTimes(commentList);
 }
 
-// delete
+picsInfo.addEventListener("click", function (e) {
+	if (/(^| )delete-comment-link( | $)/.test(e.target.className)) {
+		e.preventDefault();
+		var li = e.target.parentNode;
+		deleteComment(li);
+	}
+}, false);
+
+function deleteComment(li) {
+	var timeEl = li.getElementsByTagName("time")[0];
+	if (!timeEl) return;
+	var time = +timeEl.getAttribute("datetime");
+	ajax(commentForm.action, {
+		method: "post",
+		response_format: "json",
+		data: {
+			delete_comment: time
+		},
+		success: function (resp) {
+			commentList.removeChild(li);
+		}
+	});
+}
+
+// Delete picture
 var deleteLink = $("delete-link");
 if (deleteLink) deleteLink.addEventListener("click", function (e) {
 	e.preventDefault();

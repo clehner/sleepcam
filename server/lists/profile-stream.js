@@ -34,7 +34,7 @@ function(head, req) {
 			user: user,
 			icon: iconTime ? "images/pics/small/" + iconTime + "-" + user : null,
 			pics: [],
-			can_delete: isAdmin || (currentUser == user)
+			is_mine: currentUser == user || isAdmin
 		};
 
 		if (row) do {
@@ -55,8 +55,13 @@ function(head, req) {
 
 			var comments = doc.comments || [];
 			comments.forEach(function (comment) {
-				comment.icon = "images/profile/profile-" + user;
+				comment.icon = "images/profile/profile-" + comment.user;
 				comment.date = new Date(comment.time * 1000).toDateString();
+				// Can delete your own comments or comments on your stuff
+				if (isAdmin ||
+					currentUser == comment.user ||
+					currentUser == user)
+						comment.can_delete_comment = true;
 			});
 			stash.pics.push({
 				id: row.id,

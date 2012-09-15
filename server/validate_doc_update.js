@@ -27,8 +27,13 @@ function (doc, oldDoc, userCtx) {
 	var isAdmin = userCtx.roles.indexOf('_admin') != -1;
 	if (!oldDoc) oldDoc = 0;
 
+	if (oldDoc.type && oldDoc.type != doc.type)
+		throw {forbidden: "Cannot change doc type"};
+
 	if (doc.type == "pic") {
 		// auth
+
+		var isMyDoc = (doc.user == userCtx.name) || isAdmin;
 
 		if (!userCtx.name && !isAdmin)
 			throw {unauthorized: "You must be logged in."};
@@ -42,8 +47,9 @@ function (doc, oldDoc, userCtx) {
 		if (oldDoc && oldDoc.user != doc.user)
 			throw {unauthorized: "doc owner cannot be changed."};
 
-		if (doc.user != userCtx.name && !isAdmin)
-			throw {unauthorized: "this is not your doc."};
+		// need to be able to comment and like, so this is removed.
+		//if (!isMyDoc)
+			//throw {unauthorized: "this is not your doc."};
 
 		// schema
 
@@ -70,6 +76,16 @@ function (doc, oldDoc, userCtx) {
 
 		if (smallPic.length > largePic.length)
 			throw {forbidden: "large pic should be larger than small pic!"};
+
+		// prevent other users from altering the pictures
+		var oldAttachments = oldDoc && oldDoc._attachments;
+		var oldLargePic = oldAttachments && oldAttachments["large.jpg"];
+		var oldSmallPic = oldAttachments && oldAttachments["small.jpg"];
+
+		if (!isAdmin &&
+			(oldSmallPic && oldSmallPic.digest != smallPic.digest ||
+			oldLargePic && oldLargePic.digest != largePic.digest))
+			throw {unauthorized: "cannot change pic"};
 
 		if (!isArrayOrNull(doc.likes))
 			throw {forbidden: "improper likes array"};
@@ -104,7 +120,7 @@ function (doc, oldDoc, userCtx) {
 					a.content == b.content;
 			},
 			function onAddComment(comment, i) {
-				if (comment.user != userCtx.name)
+				if (comment.user != userCtx.name && !isAdmin)
 					throw {unauthorized: "comment with your own name."};
 
 				if (doc.comments[i-1] && doc.comments[i-1].time > comment.time)

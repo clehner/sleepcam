@@ -4,5 +4,8 @@
 		<a href="{{user}}">{{user}}</a>
 		<time datetime="{{time}}">{{date}}</time>
 	</h4>
+	{{#can_delete_comment}}
+	<a href="" class="delete-comment-link logged-in">delete</a>
+	{{/can_delete_comment}}
 	<p>{{content}}</p>
 </li>

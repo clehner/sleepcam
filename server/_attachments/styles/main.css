@@ -168,6 +168,7 @@ h2 {
 	overflow-x: hidden;
 }
 #pics-info {
+	display: none;
 	background-color: #6F6658;
 	margin-bottom: 1em;
 	padding: 1ex 1ex 0;
@@ -213,7 +214,8 @@ h2 {
 .comment h4 {
 	margin: 0ex 0ex 1ex 2.75em;
 }
-.comment time {
+.comment time,
+.comment .delete-comment-link {
 	float: right;
 }
 .comments .icon {
