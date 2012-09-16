@@ -153,7 +153,7 @@ function createaccount {
 	isonline || return 1
 	loaddb
 
-	userdoc="{\"_id\":\"org.couchdb.user:$username2\",\"name\":\"$username2\",\"roles\":[\"user\"],\"type\":\"user\",\"password\":\"$password2\"}"
+	userdoc="{\"_id\":\"org.couchdb.user:$username2\",\"name\":\"$username2\",\"roles\":[],\"type\":\"user\",\"password\":\"$password2\"}"
 	[[ `curl -sX PUT "$host/_users/org.couchdb.user:$username" --data-binary "$userdoc"` =~ '"ok":true' ]]
 }
 

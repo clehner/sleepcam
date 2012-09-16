@@ -71,7 +71,8 @@ var loginDialog = {
 					var password = self.$("password").value;
 					Couch.signup({
 						name: user,
-						roles: ["user"]
+						//roles: ["user"],
+						roles: []
 					}, password, {
 						success: function () {
 							signingUp = false;
