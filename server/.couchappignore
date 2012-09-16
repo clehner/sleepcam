@@ -1,5 +1,6 @@
 [
 	"^\\.DS_Store$",
 	".*\\.swp$",
-	"Session.vim"
+	"Session\\.vim",
+	"node"
 ]
