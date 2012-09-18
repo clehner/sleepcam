@@ -3,7 +3,8 @@
 var base = "/",
 	scriptsDir = "/scripts/",
 	header,
-	article;
+	article,
+	dbListeners = [];
 
 var loginDialog = {
 	el: null,
@@ -197,6 +198,11 @@ var app = {
 			loginDialog.show(suggestion);
 			return false;
 		}
+	},
+
+	getDb: function (cb) {
+		if (this.db) cb(this.db);
+		else dbListeners.push(cb);
 	}
 };
 
@@ -213,13 +219,13 @@ function init() {
 	shim(window.JSON, scriptsDir + "json2.js", function () {
 		shim(window.Couch, scriptsDir + "couchdb.js", function () {
 			Couch = window.Couch;
-			app.db = Couch.db(".");
-			/*
-			app.db.changes(null, {
-				filter: "sleepcam/design_doc"
-			}).onChange(function (resp) {
+			Couch.urlPrefix = base;
+			app.db = Couch.db("db");
+
+			dbListeners.forEach(function (cb) {
+				cb(app.db);
 			});
-			*/
+			dbListeners.length = 0;
 		});
 	});
 

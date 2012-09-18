@@ -64,9 +64,14 @@
 	},
 
 	{
-		"from": "_changes",
-		"to": "../../_changes"
+		"from": "db/*",
+		"to": "../../*"
 	},
+	{
+		"from": "db",
+		"to": "../../"
+	},
+
 	{
 		"from": "favicon.ico",
 		"to": "images/favicon.ico"

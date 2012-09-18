@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="styles/main.css" type="text/css">
 	<script src="scripts/util.js"></script>
 	<script src="scripts/site.js"></script>
+	<script src="scripts/home.js"></script>
 
 	<meta property="og:url" content="{{abs_base}}">
 	{{#og_pics}}
@@ -36,8 +37,7 @@
 
 	<div id="latest-all">
 		<h3>Latest pictures from everyone</h3>
-		<ul id="pics">
-		{{#pics}}<li>
+		<ul id="pics">{{#pics}}<li>
 			<a href="profile/{{user}}#!{{time}}" title="{{user}} on {{date}}">
 				<img src="images/pics/small/{{id}}" alt="">
 			</a>
