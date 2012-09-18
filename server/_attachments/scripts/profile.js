@@ -1,6 +1,7 @@
 (function () {
 
-var picsInfo = $("pics-info"),
+var user = document.getElementsByTagName("h2")[0].firstChild.nodeValue,
+	picsInfo = $("pics-info"),
 	largePic = $("large-pic"),
 	picsList = $("pics"),
 	thumbLocked = false,
@@ -299,5 +300,40 @@ if (deleteLink) deleteLink.addEventListener("click", function (e) {
 		}
 	});
 }, false);
+
+
+// Add a new pic to the list
+function gotPic(id, time, date) {
+	var li = document.createElement("li");
+
+	var a = document.createElement("a");
+	a.id = "pic-" + time;
+	a.href = "#!/" + time;			
+	a.title = date.toString();
+	li.appendChild(a);
+
+	var img = document.createElement("img");
+	img.src = "../images/pics/small/" + id;
+	a.appendChild(img);
+
+	//var picsList = $("pics");
+	picsList.insertBefore(li, picsList.firstChild);
+}
+
+// Listen for newly added pics
+app.getDb(function (db) {
+	db.changes(null, {
+		filter: "sleepcam/new-pics",
+		user: user
+	}).onChange(function (resp) {
+		if (resp.results) resp.results.forEach(function (change) {
+			var id = change.id;
+				time = id.split("-")[0],
+				date = new Date(time * 1000);
+
+			gotPic(id, time, date);
+		});
+	});
+});
 
 }());

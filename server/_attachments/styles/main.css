@@ -121,7 +121,7 @@ article {
 
 #pics li {
 	list-style-type: none;
-	display: inline-block;
+	float: left;
 }
 
 #pics img {
@@ -261,6 +261,10 @@ h1#title {
 	overflow-y: hidden;
 	margin: 0;
 	text-align: center;
+}
+#home-page #pics li {
+	float: none;
+	display: inline-block;
 }
 
 #home-page #description {
