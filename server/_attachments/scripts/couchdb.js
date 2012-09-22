@@ -357,6 +357,7 @@ var Couch = (function() {
           // set up the promise object within a closure for this handler
           var timeout = 100, db = this, active = true,
             listeners = [],
+            listening = 0;
             promise = {
             onChange : function(fun) {
               listeners.push(fun);
@@ -364,7 +365,7 @@ var Couch = (function() {
             stop : function() {
               active = false;
             },
-            start : function() { // added by cel
+            start : function() {
               if (!active) {
                 active = true;
                 if (1) {
@@ -383,6 +384,7 @@ var Couch = (function() {
           }
           // when there is a change, call any listeners, then check for another change
           options.success = function(resp) {
+            listening--;
             if (!resp) return options.error();
             timeout = 100;
             if (active) {
@@ -392,6 +394,7 @@ var Couch = (function() {
             };
           };
           options.error = function() {
+            listening--;
             if (active) {
               setTimeout(getChangesSince, timeout);
               timeout *= 2;
@@ -399,6 +402,10 @@ var Couch = (function() {
           };
           // actually make the changes request
           function getChangesSince() {
+            // prevent multiple changes feeds
+            if (listening > 0) return;
+            if (listening < 0) listening = 0;
+            listening++;
             options.feed = "longpoll";
             options.since = since;
             options.heartbeat = options.heartbeat || 10 * 1000;
