@@ -34,7 +34,7 @@ function(head, req) {
 			user: user,
 			icon: iconTime ? "images/pics/small/" + iconTime + "-" + user : null,
 			pics: [],
-			is_mine: currentUser == user || isAdmin
+			is_mine: currentUser == user
 		};
 
 		if (row) do {

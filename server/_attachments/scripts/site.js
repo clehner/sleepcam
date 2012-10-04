@@ -219,7 +219,7 @@ function init() {
 	shim(window.JSON, scriptsDir + "json2.js", function () {
 		shim(window.Couch, scriptsDir + "couchdb.js", function () {
 			Couch = window.Couch;
-			Couch.urlPrefix = base;
+			Couch.urlPrefix = base.replace(/\/$/, '');
 			app.db = Couch.db("db");
 
 			dbListeners.forEach(function (cb) {

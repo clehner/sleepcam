@@ -19,7 +19,7 @@ function(head, req) {
 			var date = new Date(time * 1000);
 			stash.pics.push({
 				id: id,
-				user: id.split('-')[1],
+				user: id.substr(id.indexOf('-')+1),
 				time: time,
 				date: date.toDateString()
 			});

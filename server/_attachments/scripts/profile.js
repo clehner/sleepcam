@@ -290,6 +290,7 @@ if (deleteLink) deleteLink.addEventListener("click", function (e) {
 	ajax(commentForm.action, {
 		method: "post",
 		data: {delete: 1},
+		response_format: "json",
 		success: function (resp) {
 			if (infoEl == selectedInfo) {
 				// go to next pic
@@ -297,6 +298,9 @@ if (deleteLink) deleteLink.addEventListener("click", function (e) {
 			}
 			picsList.removeChild(thumbEl);
 			picsInfo.removeChild(infoEl);
+		},
+		error: function (reason) {
+			alert("Unable to delete. " + reason);
 		}
 	});
 }, false);
@@ -308,7 +312,7 @@ function gotPic(id, time, date) {
 
 	var a = document.createElement("a");
 	a.id = "pic-" + time;
-	a.href = "#!/" + time;			
+	a.href = "#!" + time;			
 	a.title = date.toString();
 	li.appendChild(a);
 
@@ -318,6 +322,17 @@ function gotPic(id, time, date) {
 
 	//var picsList = $("pics");
 	picsList.insertBefore(li, picsList.firstChild);
+
+	// Add pic info
+	var info = document.createElement("div");
+	info.id = "pic-" + time + "-info";
+	info.className = "pic-info";
+
+	info.appendChild(document.createElement("ul")).className = "likes";
+	info.appendChild(document.createTextNode("\u00A0"));
+	info.appendChild(document.createElement("ul")).className = "comments";
+
+	picsInfo.insertBefore(info, commentForm);
 }
 
 // Listen for newly added pics

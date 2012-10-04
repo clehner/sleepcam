@@ -46,7 +46,7 @@ function ajax(url, opt) {
 					if (xhr.status in {200:1, 201:1, 202:1}) {
 						if (opt.success) opt.success(resp);
 					} else if (opt.error) {
-						opt.error(resp);
+						opt.error(resp.reason);
 					} else {
 						alert("Error: " + resp.reason);
 					}
