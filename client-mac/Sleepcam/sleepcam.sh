@@ -100,7 +100,7 @@ EOF
 
 		echo "uploading pic $time"
 		result=`curl -s -HContent-Type:application/json -X PUT "$db/$time-$username" --data-binary "@$tmp"`
-		if [[ "$result" =~ '"error":"' ]]; then
+		if [[ "$?" != 0 || "$result" =~ '"error":"' ]]; then
 			echo "error: $result"
 			if [[ "$result" =~ '"Name or password is incorrect."' ]]; then
 				invalidloginerror
