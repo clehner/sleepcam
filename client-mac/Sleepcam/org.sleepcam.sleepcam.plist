@@ -7,7 +7,8 @@
 	<key>ProgramArguments</key>
 	<array>
 		<string>{RESOURCES}/sleepwatcher</string>
-		<string>-w &quot;{RESOURCES}/sleepcam-snap.sh&quot;</string>
+		<string>-w</string>
+		<string>&quot;{RESOURCES}/sleepcam-snap.sh&quot;</string>
 	</array>
 	<key>RunAtLoad</key>
 	<true/>
