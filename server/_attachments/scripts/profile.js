@@ -246,7 +246,7 @@ function addComment(user, content, date) {
 	deleteA.className = "delete-comment-link";
 	deleteA.href = "";
 	deleteA.appendChild(document.createTextNode("delete"));
-	li.appendChild(p);
+	li.appendChild(deleteA);
 
 	var p = document.createElement("p");
 	p.appendChild(document.createTextNode(content));
